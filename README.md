@@ -67,7 +67,18 @@ Tpsum replaces this early check with `isCollisionShapeFullBlock(...)`, which can
 
 **Benefit:** significantly less CPU spent in the spawn hot path, fewer expensive predicate/shape checks per spawn attempt.
 
+#### 1.7 `fastIsValidSpawnPostitionForType` - reordered checks (cheap → heavy)
+Vanilla `isValidSpawnPostitionForType(...)` may perform expensive spawn-list validation (`canSpawnMobAt(...)` → biome/structure spawn tables) before running cheaper position checks.  
+On busy servers, many candidate positions fail early due to placement rules or collisions, so doing heavy spawn-list work first wastes CPU.
 
+Tpsum introduces `fastIsValidSpawnPostitionForType(...)` which reorders validation from **light to heavy**:
+
+1. **Cheap:** category / despawn-distance checks
+2. **Medium:** `SpawnPlacements` position & rule checks
+3. **Medium/Heavy:** collision check (`level.noCollision(...)`)
+4. **Heavy:** spawn-list validation (`NaturalSpawner.canSpawnMobAt(...)`)
+
+**Benefit:** fewer expensive biome/structure spawn-list lookups for candidates that would fail earlier checks anyway.
 
 ---
 

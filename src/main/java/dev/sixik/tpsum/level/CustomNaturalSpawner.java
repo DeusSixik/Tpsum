@@ -1,5 +1,6 @@
 package dev.sixik.tpsum.level;
 
+import dev.sixik.tpsum.mixin.blocks.BlockStateBaseAccessor;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraftforge.event.ForgeEventFactory;
-import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Optional;
 
@@ -81,7 +81,10 @@ public class CustomNaturalSpawner {
         return new NaturalSpawner.SpawnState(i, mobCategories, potentialCalculator, localMobCapCalculator);
     }
 
-    public static Biome getRoughBiome(BlockPos blockPos, ChunkAccess chunkAccess) {
+    public static Biome getRoughBiome(
+            final BlockPos blockPos,
+            final ChunkAccess chunkAccess
+    ) {
         return chunkAccess.getNoiseBiome(blockPos.getX() >> 2, blockPos.getY() >> 2, blockPos.getZ() >> 2).value();
     }
 
@@ -96,9 +99,9 @@ public class CustomNaturalSpawner {
         final StructureManager structureManager = serverLevel.structureManager();
         final ChunkGenerator chunkGenerator = serverLevel.getChunkSource().getGenerator();
         final int yPos = blockPos.getY();
-        final BlockState blockState = fastGetBlockState(chunkAccess, blockPos);
+        final BlockState state = fastGetBlockState(chunkAccess, blockPos);
 
-        if (blockState.isCollisionShapeFullBlock(chunkAccess, blockPos)) return;
+        if (tpsum$isRedstoneConductorFast(state)) return;
 
         final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
         int totalSpawned = 0;
@@ -150,7 +153,7 @@ public class CustomNaturalSpawner {
                         clusterSize = spawnerData.minCount + random.nextInt(1 + spawnerData.maxCount - spawnerData.minCount);
                     }
 
-                    if (NaturalSpawner.isValidSpawnPostitionForType(serverLevel, mobCategory, structureManager, chunkGenerator, spawnerData, mutableBlockPos, distSqr)
+                    if (fastIsValidSpawnPostitionForType(serverLevel, mobCategory, structureManager, chunkGenerator, spawnerData, mutableBlockPos, distSqr)
                             && spawnPredicate.test(spawnerData.type, mutableBlockPos, chunkAccess)) {
 
                         final Mob mob = NaturalSpawner.getMobForSpawn(serverLevel, spawnerData.type);
@@ -175,12 +178,20 @@ public class CustomNaturalSpawner {
         }
     }
 
+    public static boolean tpsum$isRedstoneConductorFast(
+            final BlockState state
+    ) {
+        final var cache = ((BlockStateBaseAccessor) state).tpsum$getCache();
+        if(cache != null) return ((BlockStateConductorCacheGetter)(Object) cache).tpsum$isRedstoneConductor();
+        return false;
+    }
+
     public static boolean isRightDistanceToPlayerAndSpawnPoint(
             final ServerLevel serverLevel,
             final ChunkAccess chunkAccess,
             final BlockPos.MutableBlockPos pos,
             final double distance) {
-        if(distance <= 576.0F) return false;
+        if (distance <= 576.0F) return false;
 
         /*
             Micro optimization. We get a position once
@@ -216,5 +227,35 @@ public class CustomNaturalSpawner {
         final int y = pos.getY();
         final LevelChunkSection sec = lc.getSections()[lc.getSectionIndex(y)];
         return sec.getBlockState(x & 15, y & 15, z & 15);
+    }
+
+    /**
+     * A revised version of the method for passing checks from light to heavy
+     */
+    public static boolean fastIsValidSpawnPostitionForType(
+            final ServerLevel level,
+            final MobCategory mobCategory,
+            final StructureManager structureManager,
+            final ChunkGenerator chunkGenerator,
+            final MobSpawnSettings.SpawnerData spawnerData,
+            final BlockPos.MutableBlockPos pos,
+            final double distSqr) {
+        final EntityType<?> type = spawnerData.type;
+
+        // cheap
+        if (type.getCategory() == MobCategory.MISC) return false;
+        if (!type.canSpawnFarFromPlayer() && distSqr > type.getCategory().getDespawnDistance() * type.getCategory().getDespawnDistance())
+            return false;
+
+        // medium (blocks/fluids)
+        final SpawnPlacements.Type placement = SpawnPlacements.getPlacementType(type);
+        if (!NaturalSpawner.isSpawnPositionOk(placement, level, pos, type)) return false;
+        if (!SpawnPlacements.checkSpawnRules(type, level, MobSpawnType.NATURAL, pos, level.random)) return false;
+
+        // medium/heavy
+        if (!level.noCollision(type.getAABB(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5))) return false;
+
+        // heavy (biome/structure spawn list)
+        return NaturalSpawner.canSpawnMobAt(level, structureManager, chunkGenerator, mobCategory, spawnerData, pos);
     }
 }
