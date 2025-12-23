@@ -3,6 +3,7 @@
 **Tpsum** is a small, performance-focused optimization mod for Minecraft.  
 It targets **hot paths** that are called extremely often during normal gameplay (server tick, mob spawning, biome lookup, and worldgen), with the goal of reducing CPU time and avoidable allocations/GC pressure.
 
+> [!IMPORTANT]
 > Tpsum does **not** add content. It focuses on efficiency and smoother TPS under load.
 
 ## Highlights
