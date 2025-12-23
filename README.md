@@ -5,8 +5,6 @@ It targets **hot paths** that are called extremely often during normal gameplay 
 
 > Tpsum does **not** add content. It focuses on efficiency and smoother TPS under load.
 
----
-
 ## Highlights
 
 - Faster **NaturalSpawner** (mob spawning)
@@ -14,13 +12,9 @@ It targets **hot paths** that are called extremely often during normal gameplay 
 - Reduced **worldgen allocations** (feature placement context pooling)
 - Optimized **task loop** (`BlockableEventLoop`) for high task throughput
 
----
-
 ## Download
 - [CurseForge](https://www.curseforge.com/minecraft/mc-mods/tpsum)
 - [Github](https://github.com/DeusSixik/Tpsum/releases/)
-
----
 
 ## Optimizations
 
