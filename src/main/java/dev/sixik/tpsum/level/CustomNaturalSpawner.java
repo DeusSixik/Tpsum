@@ -5,7 +5,9 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BiomeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.*;
@@ -146,7 +148,7 @@ public class CustomNaturalSpawner {
 
                 if (isRightDistanceToPlayerAndSpawnPoint(serverLevel, chunkAccess, mutableBlockPos, distSqr)) {
                     if (spawnerData == null) {
-                        Optional<MobSpawnSettings.SpawnerData> optional = NaturalSpawner.getRandomSpawnMobAt(serverLevel, structureManager, chunkGenerator, mobCategory, random, mutableBlockPos);
+                        Optional<MobSpawnSettings.SpawnerData> optional = fastGetRandomSpawnMobAt(serverLevel, structureManager, chunkGenerator, mobCategory, random, mutableBlockPos);
                         if (optional.isEmpty()) break;
 
                         spawnerData = optional.get();
@@ -257,5 +259,23 @@ public class CustomNaturalSpawner {
 
         // heavy (biome/structure spawn list)
         return NaturalSpawner.canSpawnMobAt(level, structureManager, chunkGenerator, mobCategory, spawnerData, pos);
+    }
+
+    /**
+     * The fastest way to get a chunk, but with a loss of accuracy at the boundaries of biomes.
+     * Is it very critical?
+     */
+    public static Optional<MobSpawnSettings.SpawnerData> fastGetRandomSpawnMobAt(
+            final ServerLevel serverLevel,
+            final StructureManager structureManager,
+            final ChunkGenerator chunkGenerator,
+            final MobCategory mobCategory,
+            final RandomSource randomSource,
+            final BlockPos blockPos
+    ) {
+        final Holder<Biome> holder = serverLevel.getNoiseBiome(blockPos.getX() >> 2, blockPos.getY() >> 2, blockPos.getZ() >> 2);
+        return mobCategory == MobCategory.WATER_AMBIENT && holder.is(BiomeTags.REDUCED_WATER_AMBIENT_SPAWNS) && randomSource.nextFloat() < 0.98F
+                ? Optional.empty()
+                : NaturalSpawner.mobsAt(serverLevel, structureManager, chunkGenerator, mobCategory, blockPos, holder).getRandom(randomSource);
     }
 }

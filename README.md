@@ -80,6 +80,29 @@ Tpsum introduces `fastIsValidSpawnPostitionForType(...)` which reorders validati
 
 **Benefit:** fewer expensive biome/structure spawn-list lookups for candidates that would fail earlier checks anyway.
 
+#### 1.8 `fastGetRandomSpawnMobAt` - noise-biome lookup (avoids `Level.getBiome()` / chunk access)
+
+Vanilla `NaturalSpawner.getRandomSpawnMobAt(...)` calls `serverLevel.getBiome(pos)`, which goes through `BiomeManager.getBiome()` and may require chunk access (`Level.getChunk()` / `ServerChunkCache.getChunk(...)`) to resolve the biome.
+
+Tpsum provides `fastGetRandomSpawnMobAt(...)`, which uses the **noise-biome** directly:
+
+- `serverLevel.getNoiseBiome(x >> 2, y >> 2, z >> 2)`
+
+This avoids the more expensive "fiddled biome" selection logic used by `getBiome(...)` and reduces the chance of triggering chunk lookups from the hot spawn path.
+
+**Benefit:** cheaper biome lookup during `getRandomSpawnMobAt()`, less overhead from chunk access in spawn-heavy scenarios.
+
+> [!NOTE]
+> **Accuracy trade-off (biome borders):**  
+> `getNoiseBiome(...)` returns the underlying noise biome, while `getBiome(...)` applies the biome-zoom "fiddling" step.  
+> In most cases this matches the final biome, but near biome borders the result **may differ**, which can slightly affect which spawn list is chosen at the boundary.
+
+> [!NOTE]
+> **Behavior preserved:**  
+> The water ambient reduction rule is preserved:
+> - if `mobCategory == WATER_AMBIENT` and biome matches `BiomeTags.REDUCED_WATER_AMBIENT_SPAWNS`, a random skip (`< 0.98`) still applies.
+
+
 ---
 
 ### 2) Biome lookup

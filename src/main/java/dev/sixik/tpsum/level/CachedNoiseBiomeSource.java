@@ -3,6 +3,7 @@ package dev.sixik.tpsum.level;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeManager;
+import org.jetbrains.annotations.NotNull;
 
 public final class CachedNoiseBiomeSource implements BiomeManager.NoiseBiomeSource {
     private final BiomeManager.NoiseBiomeSource delegate;
@@ -21,7 +22,7 @@ public final class CachedNoiseBiomeSource implements BiomeManager.NoiseBiomeSour
     }
 
     @Override
-    public Holder<Biome> getNoiseBiome(int x, int y, int z) {
+    public @NotNull Holder<Biome> getNoiseBiome(int x, int y, int z) {
         final Cache c = local.get();
         final int idx = hash(x, y, z) & mask;
 
