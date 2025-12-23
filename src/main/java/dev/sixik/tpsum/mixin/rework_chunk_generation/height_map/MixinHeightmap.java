@@ -13,7 +13,6 @@ import java.util.Set;
 @Mixin(Heightmap.class)
 public class MixinHeightmap {
 
-
     /**
      * @author Sixik
      * @reason Using primitive array and flag. If block is Air skip iteration element

@@ -10,5 +10,7 @@ public class Tpsum {
     public static final String MODID = "tpsum";
     public static final Logger LOGGER = LogUtils.getLogger();
 
-    public Tpsum() { }
+    public Tpsum() {
+
+    }
 }

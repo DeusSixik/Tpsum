@@ -14,7 +14,6 @@ import org.spongepowered.asm.mixin.Shadow;
 @Mixin(LevelChunkSection.class)
 public class MixinLevelChunkSection$OptimizeIteration {
 
-
     @Shadow
     private PalettedContainerRO<Holder<Biome>> biomes;
 
