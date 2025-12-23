@@ -41,6 +41,7 @@ Tpsum retrieves the nearest player **once per spawn attempt group** and uses onl
 
 **Benefit:** less overhead from nearest-player searching, which can be expensive on busy servers.
 
+> [!NOTE]
 > **Note (behavioral nuance):**  
 > Tpsum chooses the nearest player relative to the *base* coordinates used for the group, rather than re-selecting per candidate position. In edge cases with multiple players and borderline distances, this may slightly change which player is considered “nearest” for some attempts.
 
@@ -103,6 +104,7 @@ Tpsum rewrites heightmap priming to:
 
 **Benefit:** can reduce work significantly in many columns.
 
+> [!NOTE]
 > **Implementation note:**  
 > the current rewrite creates a `boolean[]` per (x,z) column. This is a tradeoff; it can be further optimized (e.g., bitset) if needed.
 
