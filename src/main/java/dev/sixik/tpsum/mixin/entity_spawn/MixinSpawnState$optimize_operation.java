@@ -1,6 +1,5 @@
 package dev.sixik.tpsum.mixin.entity_spawn;
 
-import dev.sixik.tpsum.level.CustomNaturalSpawner;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.ChunkPos;

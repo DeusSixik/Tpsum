@@ -2,8 +2,8 @@
   "required": true,
   "minVersion": "0.8",
   "package": "dev.sixik.tpsum.mixin",
-  "compatibilityLevel": "JAVA_8",
-  "refmap": "tpsum.refmap.json",
+  "plugin": "dev.sixik.tpsum.TpsumMixinConfig",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "MixinBiomeManager$access_optimize",
     "MixinBiomeManager$math_optimize",

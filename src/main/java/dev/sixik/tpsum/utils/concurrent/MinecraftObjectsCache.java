@@ -26,7 +26,7 @@ public class MinecraftObjectsCache {
 
         public WeightedRandomList<MobSpawnSettings.SpawnerData> getOrCreate(Holder<Biome> biome, MobCategory category, @Nullable Structure structure,
                                                                             Function<MobCacheKey, WeightedRandomList<MobSpawnSettings.SpawnerData>> function) {
-            return mobCache.computeIfAbsent(new MinecraftObjectsCache.MobCacheKey(biome, category, structure), function);
+            return mobCache.computeIfAbsent(new MobCacheKey(biome, category, structure), function);
         }
     }
 

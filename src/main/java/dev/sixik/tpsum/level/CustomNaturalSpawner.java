@@ -20,7 +20,7 @@ import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
-import net.minecraftforge.event.ForgeEventFactory;
+import net.neoforged.neoforge.event.EventHooks;
 
 import java.util.Optional;
 
@@ -111,7 +111,7 @@ public class CustomNaturalSpawner {
         /*
            We take out random and take it once so that we can simply access it later
          */
-        RandomSource random = serverLevel.random;
+        final RandomSource random = serverLevel.random;
 
         for (int k = 0; k < 3; ++k) {
             int x = blockPos.getX();
@@ -164,14 +164,14 @@ public class CustomNaturalSpawner {
                         mob.moveTo(d, yPos, e, random.nextFloat() * 360.0F, 0.0F);
 
                         if (NaturalSpawner.isValidPositionForMob(serverLevel, mob, distSqr)) {
-                            spawnGroupData = net.minecraftforge.event.ForgeEventFactory.onFinalizeSpawn(mob, serverLevel, serverLevel.getCurrentDifficultyAt(mob.blockPosition()), MobSpawnType.NATURAL, spawnGroupData, null);
+                            spawnGroupData = mob.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(mob.blockPosition()), MobSpawnType.NATURAL, spawnGroupData);
 
                             totalSpawned++;
                             spawnedInGroup++;
                             serverLevel.addFreshEntityWithPassengers(mob);
                             afterSpawnCallback.run(mob, chunkAccess);
 
-                            if (totalSpawned >= ForgeEventFactory.getMaxSpawnPackSize(mob)) return;
+                            if (totalSpawned >= EventHooks.getMaxSpawnClusterSize(mob)) return;
                             if (mob.isMaxGroupSizeReached(spawnedInGroup)) break;
                         }
                     }
@@ -235,30 +235,31 @@ public class CustomNaturalSpawner {
      * A revised version of the method for passing checks from light to heavy
      */
     public static boolean fastIsValidSpawnPostitionForType(
-            final ServerLevel level,
-            final MobCategory mobCategory,
-            final StructureManager structureManager,
-            final ChunkGenerator chunkGenerator,
-            final MobSpawnSettings.SpawnerData spawnerData,
-            final BlockPos.MutableBlockPos pos,
-            final double distSqr) {
+            ServerLevel level,
+            MobCategory mobCategory,
+            StructureManager structureManager,
+            ChunkGenerator chunkGenerator,
+            MobSpawnSettings.SpawnerData spawnerData,
+            BlockPos.MutableBlockPos pos,
+            double distSqr
+    ) {
         final EntityType<?> type = spawnerData.type;
 
-        // cheap
         if (type.getCategory() == MobCategory.MISC) return false;
-        if (!type.canSpawnFarFromPlayer() && distSqr > type.getCategory().getDespawnDistance() * type.getCategory().getDespawnDistance())
+
+        final int dd = type.getCategory().getDespawnDistance();
+        final double ddSqr = (double) dd * (double) dd;
+        if (!type.canSpawnFarFromPlayer() && distSqr > ddSqr) return false;
+
+        if (!type.canSummon()) return false;
+
+        if (!NaturalSpawner.canSpawnMobAt(level, structureManager, chunkGenerator, mobCategory, spawnerData, pos))
             return false;
 
-        // medium (blocks/fluids)
-        final SpawnPlacements.Type placement = SpawnPlacements.getPlacementType(type);
-        if (!NaturalSpawner.isSpawnPositionOk(placement, level, pos, type)) return false;
+        if (!SpawnPlacements.isSpawnPositionOk(type, level, pos)) return false;
         if (!SpawnPlacements.checkSpawnRules(type, level, MobSpawnType.NATURAL, pos, level.random)) return false;
 
-        // medium/heavy
-        if (!level.noCollision(type.getAABB(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5))) return false;
-
-        // heavy (biome/structure spawn list)
-        return NaturalSpawner.canSpawnMobAt(level, structureManager, chunkGenerator, mobCategory, spawnerData, pos);
+        return level.noCollision(type.getSpawnAABB(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5));
     }
 
     /**
