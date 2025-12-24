@@ -25,6 +25,10 @@ public class TpsumMixinPlugin implements IMixinConfigPlugin {
                 "vazkii.botania.mixin.NaturalSpawnerMixin"
             )
         );
+        create("artifacts.Artifacts", new MixinApplier.Param(
+                "dev.sixik.tpsum.mixin.compat.artifacts.ArtifactsNaturalSpawnerMixin",
+                "artifacts.mixin.item.wearable.NaturalSpawnerMixin"
+        ));
     }
 
     @Override
