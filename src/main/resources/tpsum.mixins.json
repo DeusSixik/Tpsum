@@ -4,6 +4,7 @@
   "package": "dev.sixik.tpsum.mixin",
   "compatibilityLevel": "JAVA_8",
   "refmap": "tpsum.refmap.json",
+  "plugin": "dev.sixik.tpsum.TpsumMixinPlugin",
   "mixins": [
     "MixinBiomeManager$access_optimize",
     "MixinBiomeManager$math_optimize",
@@ -11,6 +12,8 @@
     "blocks.BlockStateBaseAccessor",
     "blocks.BlockStateCacheAccessor",
     "blocks.MixinBlockState$cache_conductor",
+    "compat.botania.BotaniaNaturalSpawnerMixin",
+    "compat.botania.BotaniaCustomNaturalSpawnerMixin",
     "entity_spawn.MixinNaturalSpawner$redirect_to_optimized_methods",
     "entity_spawn.MixinSpawnState$optimize_operation",
     "rework_chunk_generation.MixinChunkGenerator",
