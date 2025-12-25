@@ -29,6 +29,16 @@ public class TpsumMixinPlugin implements IMixinConfigPlugin {
                 "dev.sixik.tpsum.mixin.compat.artifacts.ArtifactsNaturalSpawnerMixin",
                 "artifacts.mixin.item.wearable.NaturalSpawnerMixin"
         ));
+        create("com.faboslav.variantsandventures.common.VariantsAndVentures",
+            new MixinApplier.Param(
+                "dev.sixik.tpsum.mixin.compat.variants_and_ventures.VariantsandventuresNaturalSpawnerMixin",
+                "com.faboslav.variantsandventures.forge.mixin.SpawnHelperMixin"
+            ),
+            new MixinApplier.Param(
+                "dev.sixik.tpsum.mixin.compat.variants_and_ventures.VariantsandventuresCustomNaturalSpawnerMixin",
+                "com.faboslav.variantsandventures.forge.mixin.SpawnHelperMixin"
+            )
+        );
     }
 
     @Override

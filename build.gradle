@@ -167,10 +167,16 @@ dependencies {
         jarJar.ranged(it, "[0.3.7-beta.1,)")
     }
 
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.0"))
+    implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.0")) {
+        jarJar.ranged(it, "[0.5.0,)")
+    }
+
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
     compileOnly fg.deobf("curse.maven:botania-225643:6870713")
     compileOnly fg.deobf("curse.maven:artifacts-312353:6399828")
+    compileOnly fg.deobf("curse.maven:variants-and-ventures-981139:5751852")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
