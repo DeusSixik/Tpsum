@@ -19,8 +19,6 @@ It targets **hot paths** that are called extremely often during normal gameplay 
 
 ## Optimizations
 
-## Optimizations
-
 1. [Mob spawning (NaturalSpawner)](docs/NaturalSpawner.md)
 2. [Biome lookup](docs/BiomeLookup.md)
 3. [Worldgen / chunk init / allocation reductions](docs/WorldGen.md)
