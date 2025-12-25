@@ -1,26 +1,45 @@
 package dev.sixik.tpsum;
 
+import dev.sixik.tpsum.utils.MixinApplier;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 import org.spongepowered.asm.service.MixinService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class TpsumMixinConfig implements IMixinConfigPlugin {
 
-    private static final String DISABLE_IF_CLASS_PRESENT = "com.ishland.c2me.base.common.C2MEConstants";
-
-    private static final List<String> DISABLE_IF_C2ME = List.of(
-            "dev.sixik.tpsum.mixin.rework_chunk_generation.features.MixinConfiguredFeature",
-            "dev.sixik.tpsum.mixin.rework_chunk_generation.MixinChunkGenerator",
-            "dev.sixik.tpsum.mixin.rework_chunk_generation.MixinNoiseBasedChunkGenerator"
-    );
+    public static List<MixinApplier> mixinAppliers = new ArrayList<>();
 
     @Override
     public void onLoad(String mixinPackage) {
-
+        create("com.ishland.c2me.base.common.C2MEConstants",
+                new MixinApplier.Param(
+                        "",
+                        "dev.sixik.tpsum.mixin.rework_chunk_generation.features.MixinConfiguredFeature"
+                ),
+                new MixinApplier.Param(
+                        "",
+                        "dev.sixik.tpsum.mixin.rework_chunk_generation.MixinChunkGenerator"
+                ),
+                new MixinApplier.Param(
+                        "",
+                        "dev.sixik.tpsum.mixin.rework_chunk_generation.MixinNoiseBasedChunkGenerator"
+                )
+        );
+        create("ca.spottedleaf.moonrise.neoforge.MoonriseNeoForge",
+                new MixinApplier.Param(
+                        "",
+                        "dev.sixik.tpsum.mixin.rework_chunk_generation.MixinChunkGenerator"
+                ),
+                new MixinApplier.Param(
+                        "",
+                        "dev.sixik.tpsum.mixin.rework_chunk_generation.MixinNoiseBasedChunkGenerator"
+                )
+        );
     }
 
     @Override
@@ -30,9 +49,14 @@ public class TpsumMixinConfig implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if(!DISABLE_IF_C2ME.contains(mixinClassName)) return true;
+        for (MixinApplier mixinApplier : mixinAppliers) {
+            if (mixinApplier.hasDisableMixin(mixinClassName) && mixinApplier.isModLoaded())
+                return false;
 
-        return !classExists(DISABLE_IF_CLASS_PRESENT);
+            if (mixinApplier.hasMixin(mixinClassName) && !mixinApplier.isModLoaded())
+                return false;
+        }
+        return true;
     }
 
     @Override
@@ -52,23 +76,10 @@ public class TpsumMixinConfig implements IMixinConfigPlugin {
 
     @Override
     public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-
     }
 
-    private static boolean classExists(String name) {
-        try {
-            final ClassLoader cl = Thread.currentThread().getContextClassLoader();
-            Class.forName(name, false, cl);
-            return true;
-        } catch (Throwable ignored) {
-            try {
-                final ClassNode node = MixinService.getService()
-                        .getBytecodeProvider()
-                        .getClassNode(name, false);
-                return node != null;
-            } catch (Throwable ignored2) {
-                return false;
-            }
-        }
+
+    public void create(String modClass, MixinApplier.Param... params) {
+        mixinAppliers.add(new MixinApplier(modClass, params));
     }
 }
