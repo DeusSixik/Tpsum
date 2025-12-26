@@ -16,6 +16,8 @@ repositories {
     maven {
         url "https://cursemaven.com"
     }
+    maven { url = "https://maven.enjarai.dev/mirrors" }
+    maven { url = "https://maven.bawnorton.com/releases" }
 }
 
 base {
@@ -108,39 +110,28 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 
 dependencies {
-    // Example mod dependency with JEI
-    // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
-    // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
-    // compileOnly "mezz.jei:jei-${mc_version}-forge-api:${jei_version}"
-    // runtimeOnly "mezz.jei:jei-${mc_version}-forge:${jei_version}"
 
-//    implementation "org.jctools:jctools-core:4.0.3"
     clientAdditionalRuntimeClasspath "org.jctools:jctools-core:4.0.3"
     runtimeOnly "org.jctools:jctools-core:4.0.3"
 
-//    // чтобы запаковать в мод (Jar-in-Jar)
     jarJar(implementation("org.jctools:jctools-core")) {
         version {
-            strictly '[4.0.3,5.0.0)' // 兼容的版本范围
-            prefer '4.0.3' // 开发环境和打包时使用的版本
+            strictly '[4.0.3,5.0.0)'
+            prefer '4.0.3'
+        }
+    }
+
+    compileOnly(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-common:0.3.7-beta.1"))
+    jarJar(implementation("com.github.bawnorton.mixinsquared:mixinsquared-forge:0.3.7-beta.1")) {
+        version {
+            strictly '[0.3.7-beta.1,)'
+            prefer '0.3.7-beta.1'
         }
     }
 
     implementation "curse.maven:moonrise-1096335:7089177"
-    // Example mod dependency using a mod jar from ./libs with a flat dir repository
-    // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
-    // The group id is ignored when searching -- in this case, it is "blank"
-    // implementation "blank:coolmod-${mc_version}:${coolmod_version}"
-
-    // Example mod dependency using a file as dependency
-    // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
-
-    // Example project dependency using a sister or child project:
-    // implementation project(":myproject")
-
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    compileOnly "curse.maven:artifacts-312353:7113293"
+    compileOnly "curse.maven:variants-and-ventures-981139:7132260"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -4,7 +4,6 @@ import dev.sixik.tpsum.utils.MixinApplier;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
-import org.spongepowered.asm.service.MixinService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +37,20 @@ public class TpsumMixinConfig implements IMixinConfigPlugin {
                 new MixinApplier.Param(
                         "",
                         "dev.sixik.tpsum.mixin.rework_chunk_generation.MixinNoiseBasedChunkGenerator"
+                )
+        );
+        create("artifacts.Artifacts", new MixinApplier.Param(
+                "dev.sixik.tpsum.mixin.compat.artifacts.ArtifactsNaturalSpawnerMixin",
+                "artifacts.mixin.item.NaturalSpawnerMixin"
+        ));
+        create("com.faboslav.variantsandventures.common.VariantsAndVentures",
+                new MixinApplier.Param(
+                        "dev.sixik.tpsum.mixin.compat.variants_and_ventures.VariantsandventuresNaturalSpawnerMixin",
+                        "com.faboslav.variantsandventures.forge.mixin.SpawnHelperMixin"
+                ),
+                new MixinApplier.Param(
+                        "dev.sixik.tpsum.mixin.compat.variants_and_ventures.VariantsandventuresCustomNaturalSpawnerMixin",
+                        "com.faboslav.variantsandventures.forge.mixin.SpawnHelperMixin"
                 )
         );
     }
