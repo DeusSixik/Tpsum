@@ -53,6 +53,12 @@ public class TpsumMixinConfig implements IMixinConfigPlugin {
                         "com.faboslav.variantsandventures.forge.mixin.SpawnHelperMixin"
                 )
         );
+        create("com.zv.neoforge.ModNeoForge",
+                new MixinApplier.Param(
+                        "dev.sixik.tpsum.mixin.compat.zombie_variants.ZombieVariantNaturalSpawnerMixin",
+                        "com.zv.mixin.SpawnHelperMix"
+                )
+        );
     }
 
     @Override

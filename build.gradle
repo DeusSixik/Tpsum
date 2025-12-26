@@ -132,6 +132,7 @@ dependencies {
     implementation "curse.maven:moonrise-1096335:7089177"
     compileOnly "curse.maven:artifacts-312353:7113293"
     compileOnly "curse.maven:variants-and-ventures-981139:7132260"
+    compileOnly "curse.maven:zombie-variants-1299553:6826478"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
