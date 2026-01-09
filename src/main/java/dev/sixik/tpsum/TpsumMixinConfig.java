@@ -37,6 +37,10 @@ public class TpsumMixinConfig implements IMixinConfigPlugin {
                 new MixinApplier.Param(
                         "",
                         "dev.sixik.tpsum.mixin.rework_chunk_generation.MixinNoiseBasedChunkGenerator"
+                ),
+                new MixinApplier.Param(
+                        "",
+                        "dev.sixik.tpsum.mixin.entity_spawn.MixinLocalMobCapCalculator$MobCount$optimize_allocation"
                 )
         );
         create("artifacts.Artifacts", new MixinApplier.Param(
@@ -57,6 +61,16 @@ public class TpsumMixinConfig implements IMixinConfigPlugin {
                 new MixinApplier.Param(
                         "dev.sixik.tpsum.mixin.compat.zombie_variants.ZombieVariantNaturalSpawnerMixin",
                         "com.zv.mixin.SpawnHelperMix"
+                )
+        );
+        create("com.xiaohunao.heaven_destiny_moment.HeavenDestinyMoment",
+                new MixinApplier.Param(
+                        "dev.sixik.tpsum.mixin.compat.heaven_destiny_moment.HDM$CustomNaturalSpawnerMixin",
+                        "com.xiaohunao.heaven_destiny_moment.common.mixin.NaturalSpawnerMixin"
+                ),
+                new MixinApplier.Param(
+                        "dev.sixik.tpsum.mixin.compat.heaven_destiny_moment.HDM$NaturalSpawnerMixin",
+                        "com.xiaohunao.heaven_destiny_moment.common.mixin.NaturalSpawnerMixin"
                 )
         );
     }

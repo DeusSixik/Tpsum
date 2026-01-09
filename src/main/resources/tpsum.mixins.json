@@ -13,9 +13,12 @@
     "blocks.MixinBlockState$cache_conductor",
     "blocks.MixinLevelChunk$optimize_block_operations",
     "compat.artifacts.ArtifactsNaturalSpawnerMixin",
+    "compat.heaven_destiny_moment.HDM$CustomNaturalSpawnerMixin",
+    "compat.heaven_destiny_moment.HDM$NaturalSpawnerMixin",
     "compat.variants_and_ventures.VariantsandventuresCustomNaturalSpawnerMixin",
     "compat.variants_and_ventures.VariantsandventuresNaturalSpawnerMixin",
     "compat.zombie_variants.ZombieVariantNaturalSpawnerMixin",
+    "entity_logic.MixinEntity$optimize_collect_passengers",
     "entity_spawn.MixinLocalMobCapCalculator$MobCount$optimize_allocation",
     "entity_spawn.MixinNaturalSpawner$redirect_to_optimized_methods",
     "entity_spawn.MixinSpawnState$optimize_operation",
@@ -24,7 +27,8 @@
     "rework_chunk_generation.MixinNoiseBasedChunkGenerator",
     "rework_chunk_generation.biome.MixinLevelChunkSection$OptimizeIteration",
     "rework_chunk_generation.features.MixinConfiguredFeature",
-    "rework_chunk_generation.height_map.MixinHeightmap"
+    "rework_chunk_generation.height_map.MixinHeightmap",
+    "ticks.MixinChunkMap$optimize_tick"
   ],
   "client": [
   ],

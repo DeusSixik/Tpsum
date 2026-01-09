@@ -19,6 +19,7 @@
 //
 //import java.util.Arrays;
 //
+//@Deprecated
 //@Mixin(ServerChunkCache.class)
 //public abstract class MixinServerChunkCache$optimize_tick_chunks extends ChunkSource {
 //
@@ -43,11 +44,19 @@
 //
 //
 //    @Inject(method = "tickChunks", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Lists;newArrayListWithCapacity(I)Ljava/util/ArrayList;"), cancellable = true)
-//    private void bts$optimizedTickChunks(CallbackInfo ci, @Local(ordinal = 0) ProfilerFiller profilerfiller, @Local(ordinal = 0) long inhabitedDelta, @Local(ordinal = 0) int randomTickSpeed, @Local(ordinal = 1) boolean is400thTick, @Local(ordinal = 0) NaturalSpawner.SpawnState spawnState) {
+//    private void bts$optimizedTickChunks(
+//            CallbackInfo ci,
+//            @Local(ordinal = 0) ProfilerFiller profilerfiller,
+//            @Local(ordinal = 0) long inhabitedDelta
+////            @Local(ordinal = 0) NaturalSpawner.SpawnState spawnState
+//    ) {
 //        ci.cancel();
+//        NaturalSpawner.SpawnState spawnState = null;
 //
 //        int count = 0;
 //        final Iterable<ChunkHolder> holders = this.chunkMap.getChunks();
+//        final int randomTickSpeed = this.level.getGameRules().getInt(GameRules.RULE_RANDOMTICKING);
+//        final boolean is400thTick = this.level.getLevelData().getGameTime() % 400L == 0L;
 //
 //        /*
 //            Secure data collection with capacity verification

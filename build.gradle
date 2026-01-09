@@ -129,12 +129,18 @@ dependencies {
         }
     }
 
-    implementation "curse.maven:moonrise-1096335:7089177"
+    compileOnly "curse.maven:moonrise-1096335:7089177"
     compileOnly "curse.maven:artifacts-312353:7113293"
     compileOnly "curse.maven:variants-and-ventures-981139:7132260"
     compileOnly "curse.maven:zombie-variants-1299553:6826478"
 
-    implementation "curse.maven:heaven-destiny-moment-1160457:5995948"
+    compileOnly "curse.maven:confluence-1209464:6875060"
+
+    compileOnly files("libs/com.xiaohunao.heaven_destiny_moment-1.21.1-0.0.1.jar")
+    compileOnly files("libs/org.confluence.lib.confluence_magic_lib-0.0.2a-SNAPSHOT.jar")
+    compileOnly files("libs/org.confluence.phase_journey-0.0.1.jar")
+    compileOnly files("libs/org.confluence.terra_curio-1.1.1.jar")
+    compileOnly files("libs/org.confluence.terra_guns-1.21.1-1.0.jar")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
