@@ -39,6 +39,16 @@ public class TpsumMixinPlugin implements IMixinConfigPlugin {
                 "com.faboslav.variantsandventures.forge.mixin.SpawnHelperMixin"
             )
         );
+        create("dev.xkmc.spawn_range_adjuster.init.SpawnRangeAdjuster",
+                new MixinApplier.Param(
+                        "dev.sixik.tpsum.mixin.compat.spawn_range_adjuster.SRA$CustomNaturalSpawnerMixin",
+                        "dev.xkmc.spawn_range_adjuster.mixin.NaturalSpanwerMixin"
+                ),
+                new MixinApplier.Param(
+                        "dev.sixik.tpsum.mixin.compat.spawn_range_adjuster.SRA$NaturalSpawnerMixin",
+                        "dev.xkmc.spawn_range_adjuster.mixin.NaturalSpanwerMixin"
+                )
+        );
     }
 
     @Override

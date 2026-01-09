@@ -11,6 +11,7 @@ import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(NaturalSpawner.SpawnState.class)
 public class MixinSpawnState$optimize_operation {
@@ -53,14 +54,18 @@ public class MixinSpawnState$optimize_operation {
      * @author Sixik
      * @reason Using cached Mob Category caps
      */
-    @Overwrite
-    public boolean canSpawnForCategory(MobCategory mobCategory, ChunkPos chunkPos) {
+    @Inject(method = "canSpawnForCategory", at = @At("HEAD"), cancellable = true)
+    public void canSpawnForCategory(MobCategory mobCategory, ChunkPos chunkPos, CallbackInfoReturnable<Boolean> cir) {
         final int cap = this.bts$categoryCaps[mobCategory.ordinal()];
-        if (cap <= 0) return false;
+        if (cap <= 0) {
+            cir.setReturnValue(false);
+            return;
+        }
 
         if (this.mobCategoryCounts.getInt(mobCategory) >= cap) {
-            return false;
+            cir.setReturnValue(false);
+            return;
         }
-        return this.localMobCapCalculator.canSpawn(mobCategory, chunkPos);
+        cir.setReturnValue(this.localMobCapCalculator.canSpawn(mobCategory, chunkPos));
     }
 }

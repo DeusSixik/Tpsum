@@ -177,6 +177,8 @@ dependencies {
     compileOnly fg.deobf("curse.maven:botania-225643:6870713")
     compileOnly fg.deobf("curse.maven:artifacts-312353:6399828")
     compileOnly fg.deobf("curse.maven:variants-and-ventures-981139:5751852")
+
+    implementation fg.deobf("curse.maven:spawn-cap-range-adjuster-1315305:6821247")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -16,6 +16,8 @@
     "compat.artifacts.ArtifactsNaturalSpawnerMixin",
     "compat.botania.BotaniaCustomNaturalSpawnerMixin",
     "compat.botania.BotaniaNaturalSpawnerMixin",
+    "compat.spawn_range_adjuster.SRA$CustomNaturalSpawnerMixin",
+    "compat.spawn_range_adjuster.SRA$NaturalSpawnerMixin",
     "compat.variants_and_ventures.VariantsandventuresCustomNaturalSpawnerMixin",
     "compat.variants_and_ventures.VariantsandventuresNaturalSpawnerMixin",
     "entity_logic.MixinEntity$optimize_collect_passengers",
