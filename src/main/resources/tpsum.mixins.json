@@ -35,7 +35,9 @@
     "rework_chunk_generation.biome.MixinChunkAccess$fast_getNoiseBiome",
     "rework_chunk_generation.biome.MixinLevelChunkSection$OptimizeIteration",
     "rework_chunk_generation.features.MixinConfiguredFeature",
-    "rework_chunk_generation.height_map.MixinHeightmap"
+    "rework_chunk_generation.height_map.MixinHeightmap",
+    "ticks.MixinChunkMap$optimize_tick",
+    "ticks.MixinServerChunkCache$optimize_tick_chunks"
   ],
   "client": [
   ],

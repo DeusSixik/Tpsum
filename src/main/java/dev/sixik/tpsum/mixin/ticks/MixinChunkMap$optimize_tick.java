@@ -11,6 +11,7 @@ import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.storage.ChunkStorage;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -21,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(ChunkMap.class)
@@ -81,7 +81,7 @@ public abstract class MixinChunkMap$optimize_tick extends ChunkStorage implement
             /*
                  Quick check of the ticking range
              */
-            if (hasMoved || this.distanceManager.inEntityTickingRange(SectionPos.asLong(currentX, currentY, currentZ))) {
+            if (hasMoved || this.distanceManager.inEntityTickingRange(ChunkPos.asLong(currentX, currentZ))) {
                 trackedEntity.serverEntity.sendChanges();
             }
         }
