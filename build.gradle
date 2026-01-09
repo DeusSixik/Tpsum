@@ -133,6 +133,8 @@ dependencies {
     compileOnly "curse.maven:artifacts-312353:7113293"
     compileOnly "curse.maven:variants-and-ventures-981139:7132260"
     compileOnly "curse.maven:zombie-variants-1299553:6826478"
+
+    implementation "curse.maven:heaven-destiny-moment-1160457:5995948"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

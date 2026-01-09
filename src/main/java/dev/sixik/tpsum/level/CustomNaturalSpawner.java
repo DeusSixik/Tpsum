@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.*;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -227,8 +228,13 @@ public class CustomNaturalSpawner {
         }
 
         final int y = pos.getY();
-        final LevelChunkSection sec = lc.getSections()[lc.getSectionIndex(y)];
-        return sec.getBlockState(x & 15, y & 15, z & 15);
+        final LevelChunkSection[] section = lc.getSections();
+        if(y >= 0 && y < section.length) {
+            final LevelChunkSection sec = section[lc.getSectionIndex(y)];
+            return sec.getBlockState(x & 15, y & 15, z & 15);
+        }
+
+        return Blocks.AIR.defaultBlockState();
     }
 
     /**

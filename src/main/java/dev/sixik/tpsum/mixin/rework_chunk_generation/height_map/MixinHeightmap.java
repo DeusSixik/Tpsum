@@ -15,39 +15,56 @@ public class MixinHeightmap {
 
     /**
      * @author Sixik
-     * @reason Using primitive array and flag. If block is Air skip iteration element
+     * @reason Replaces iterator.remove() overhead with bitmask operations. Zero allocations in loop.
      */
     @Overwrite
     public static void primeHeightmaps(ChunkAccess chunk, Set<Heightmap.Types> types) {
-        int numTypes = types.size();
-        Heightmap[] heightmaps = new Heightmap[numTypes];
-        int index = 0;
+        final int numTypes = types.size();
+        final Heightmap[] heightmaps = new Heightmap[numTypes];
+        int idx = 0;
         for (Heightmap.Types type : types) {
-            heightmaps[index++] = chunk.getOrCreateHeightmapUnprimed(type);
+            heightmaps[idx++] = chunk.getOrCreateHeightmapUnprimed(type);
         }
 
-        int highestSection = chunk.getHighestSectionPosition() + 16;
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        final int highestSection = chunk.getHighestSectionPosition() + 16;
+        final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+
+        /*
+            Bit mask: 1 means that the elevation map is not yet filled
+         */
+        final int initialMask = (1 << numTypes) - 1;
 
         for (int x = 0; x < 16; ++x) {
             for (int z = 0; z < 16; ++z) {
-                boolean[] active = new boolean[numTypes];
-                Arrays.fill(active, true);
+                int activeMask = initialMask;
 
-                int activeCount = numTypes;
                 for (int y = highestSection - 1; y >= chunk.getMinBuildHeight(); --y) {
                     pos.set(x, y, z);
                     BlockState state = chunk.getBlockState(pos);
+
                     if (state.isAir()) continue;
 
                     for (int i = 0; i < numTypes; ++i) {
-                        if (active[i] && heightmaps[i].isOpaque.test(state)) {
-                            heightmaps[i].setHeight(x, z, y + 1);
-                            active[i] = false;
-                            if (--activeCount == 0) break;
+
+                        /*
+                            Checking if the i bit is active
+                         */
+                        if ((activeMask & (1 << i)) != 0) {
+                            if (heightmaps[i].isOpaque.test(state)) {
+                                heightmaps[i].setHeight(x, z, y + 1);
+
+                                /*
+                                    Turn off bit i (set it to 0)
+                                 */
+                                activeMask &= ~(1 << i);
+                            }
                         }
                     }
-                    if (activeCount == 0) break;
+
+                    /*
+                        If all the bits are zero, stop the loop at Y
+                     */
+                    if (activeMask == 0) break;
                 }
             }
         }
