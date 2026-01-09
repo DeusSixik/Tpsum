@@ -16,6 +16,7 @@
     "compat.variants_and_ventures.VariantsandventuresCustomNaturalSpawnerMixin",
     "compat.variants_and_ventures.VariantsandventuresNaturalSpawnerMixin",
     "compat.zombie_variants.ZombieVariantNaturalSpawnerMixin",
+    "entity_spawn.MixinLocalMobCapCalculator$MobCount$optimize_allocation",
     "entity_spawn.MixinNaturalSpawner$redirect_to_optimized_methods",
     "entity_spawn.MixinSpawnState$optimize_operation",
     "math.MixinVec3i$access",
