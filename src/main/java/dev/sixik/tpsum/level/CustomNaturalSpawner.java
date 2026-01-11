@@ -27,6 +27,8 @@ import java.util.Optional;
 
 public class CustomNaturalSpawner {
 
+    public static final ThreadLocal<RandomSource> LOCAL_RANDOM = ThreadLocal.withInitial(RandomSource::create);
+
     public static NaturalSpawner.SpawnState createState(
             final int i,
             final Iterable<Entity> iterable,
@@ -112,7 +114,7 @@ public class CustomNaturalSpawner {
         /*
            We take out random and take it once so that we can simply access it later
          */
-        final RandomSource random = serverLevel.random;
+        final RandomSource random = LOCAL_RANDOM.get();
 
         for (int k = 0; k < 3; ++k) {
             int x = blockPos.getX();
