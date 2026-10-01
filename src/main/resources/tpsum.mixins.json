@@ -20,6 +20,8 @@
     "compat.spawn_range_adjuster.SRA$NaturalSpawnerMixin",
     "compat.variants_and_ventures.VariantsandventuresCustomNaturalSpawnerMixin",
     "compat.variants_and_ventures.VariantsandventuresNaturalSpawnerMixin",
+    "compat.fowlplay.FowlPlayCustomNaturalSpawnerMixin",
+    "compat.fowlplay.FowlPlayNaturalSpawnerMixin",
     "entity_logic.MixinEntity$optimize_collect_passengers",
     "entity_logic.ai.behavior.MixinAcquirePoi$optimization_allocation",
     "entity_logic.goal_basic.Goal$add_bits_mask",

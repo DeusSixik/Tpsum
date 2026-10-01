@@ -49,6 +49,16 @@ public class TpsumMixinPlugin implements IMixinConfigPlugin {
                         "dev.xkmc.spawn_range_adjuster.mixin.NaturalSpanwerMixin"
                 )
         );
+        create("aqario.fowlplay.core.FowlPlay",
+                new MixinApplier.Param(
+                        "dev.sixik.tpsum.mixin.compat.fowlplay.FowlPlayNaturalSpawnerMixin",
+                        "aqario.fowlplay.mixin.NaturalSpawnerMixin"
+                ),
+                new MixinApplier.Param(
+                        "dev.sixik.tpsum.mixin.compat.fowlplay.FowlPlayCustomNaturalSpawnerMixin",
+                        "aqario.fowlplay.mixin.NaturalSpawnerMixin"
+                )
+        );
     }
 
     @Override
